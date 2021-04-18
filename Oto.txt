@@ -1,0 +1,128 @@
+CREATE TABLE Customers(
+   cus_id INT AUTO_INCREMENT ,
+   cus_name VARCHAR(50) NOT NULL,
+   cus_firstname VARCHAR(50) NOT NULL,
+   cus_adress VARCHAR(50) NOT NULL,
+   cus_Zipcode INT NOT NULL,
+   cus_country VARCHAR(50) NOT NULL,
+   cus_password VARCHAR(50) NOT NULL,
+   cus_telephone VARCHAR(20) NOT NULL,
+   cus_mail VARCHAR(50) NOT NULL,
+   cus_add DATETIME NOT NULL,
+   cus_update DATETIME NOT NULL,
+   cus_licence INT NOT NULL,
+   PRIMARY KEY (cus_id),
+   UNIQUE(cus_password),
+   UNIQUE(cus_telephone),
+   UNIQUE(cus_mail),
+   UNIQUE(cus_licence)
+
+) Engine=InnoDB;
+
+CREATE TABLE Concession(
+   con_SIRET INT,
+   con_service_categorie VARCHAR(50) NOT NULL,
+   con_name VARCHAR(50) NOT NULL,
+   con_adress VARCHAR(50) NOT NULL,
+   con_Zipcode INT NOT NULL,
+   con_city VARCHAR(50) NOT NULL,
+   con_telephone VARCHAR(50) NOT NULL,
+   con_mail VARCHAR(50) NOT NULL,
+   con_employe_id VARCHAR(50) NOT NULL,
+   con_employe_telephone VARCHAR(50) NOT NULL,
+   con_employe_mail VARCHAR(50) NOT NULL,
+   PRIMARY KEY(con_SIRET),
+   UNIQUE(con_employe_id)
+)ENGINE = INNODB;
+
+CREATE TABLE Commercial(
+   com_id INT AUTO_INCREMENT ,
+   com_name VARCHAR(50) NOT NULL,
+   com_firstname VARCHAR(50) NOT NULL,
+   com_telephone VARCHAR(50) NOT NULL,
+   com_mail VARCHAR(50) NOT NULL,
+   com_department VARCHAR(50) NOT NULL,
+   con_SIRET INT NOT NULL,
+   PRIMARY KEY(com_id),
+   UNIQUE(com_telephone),
+   UNIQUE(com_mail),
+   FOREIGN KEY(con_SIRET) REFERENCES Concession(con_SIRET)
+)ENGINE = INNODB;
+
+
+CREATE TABLE Order_(
+   ord_id INT AUTO_INCREMENT ,
+   ord_shipAdress VARCHAR(80) NOT NULL,
+   ord_shipCity VARCHAR(30) NOT NULL,
+   ord_shipName VARCHAR(30) NOT NULL,
+   ord_shipZipcode INT NOT NULL,
+   ord_shipRegion VARCHAR(50) NOT NULL,
+   ord_shipVia INT NOT NULL,
+   ord_date DATETIME NOT NULL,
+   ord_type_paiement VARCHAR(50) NOT NULL,
+   ord_paiementMethod VARCHAR(50) NOT NULL,
+   ord_shippedDate DATETIME NOT NULL,
+   ord_dateReceipt DATETIME NOT NULL,
+   ord_orderReceipt VARCHAR(50) NOT NULL,
+   cus_id INT NOT NULL,
+   com_id INT NOT NULL,
+   PRIMARY KEY(ord_id),
+   UNIQUE(ord_orderReceipt),
+   FOREIGN KEY(cus_id) REFERENCES Customers(cus_id),
+   FOREIGN KEY(com_id) REFERENCES Commercial(com_id)
+
+) Engine=InnoDB;
+
+CREATE TABLE Unit_in_Stocks(
+   uni_id INT AUTO_INCREMENT,
+   uni_serialNumber INT NOT NULL,
+   uni_kilometers INT NOT NULL,
+   uni_CT VARCHAR(50) NOT NULL,
+   uni_fiscal_power INT NOT NULL,
+   uni_carburant VARCHAR(50) NOT NULL,
+   uni_assurance_date DATETIME NOT NULL,
+   PRIMARY KEY(uni_id)
+)ENGINE=INNODB;
+
+CREATE TABLE Accessories_and_option(
+   acc_id INT AUTO_INCREMENT,
+   acc_type VARCHAR(50) NOT NULL,
+   acc_unit_price INT NOT NULL,
+   acc_quantity INT NOT NULL,
+   PRIMARY KEY(acc_id)
+)ENGINE=INNODB;
+
+CREATE TABLE Cars(
+   car_id INT AUTO_INCREMENT,
+   car_new BINARY NOT NULL,
+   car_used BINARY NOT NULL,
+   car_category VARCHAR(50) NOT NULL,
+   car_brand VARCHAR(50) NOT NULL,
+   car_model VARCHAR(50) NOT NULL,
+   car_unit_price INT NOT NULL,
+   car_quantity INT NOT NULL,
+   uni_id INT NOT NULL,
+   com_id INT NOT NULL,
+   acc_id INT NOT NULL,
+   PRIMARY KEY(car_id),
+   FOREIGN KEY(uni_id) REFERENCES Unit_in_Stocks(uni_id),
+   FOREIGN KEY(com_id) REFERENCES Commercial(com_id),
+   FOREIGN KEY(acc_id) REFERENCES Accessories_and_option(acc_id)
+)ENGINE=INNODB;
+
+CREATE TABLE Repair_and_maintenance(
+   rep_id INT AUTO_INCREMENT,
+   rep_type VARCHAR(50) NOT NULL,
+   rep_unit_price VARCHAR(50) NOT NULL,
+   rep_quantity INT NOT NULL,
+   PRIMARY KEY(rep_id)
+)ENGINE=INNODB;
+
+CREATE TABLE maintain(
+   rep_id INT,
+   com_id INT,
+   PRIMARY KEY(rep_id, com_id),
+   FOREIGN KEY(rep_id) REFERENCES Repair_and_maintenance(rep_id),
+   FOREIGN KEY(com_id) REFERENCES Commercial(com_id)
+)ENGINE=INNODB;
+
