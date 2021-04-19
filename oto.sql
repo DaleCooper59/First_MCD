@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 19 avr. 2021 à 08:27
+-- Généré le : lun. 19 avr. 2021 à 09:19
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -30,11 +30,11 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `accessories_and_option`;
 CREATE TABLE IF NOT EXISTS `accessories_and_option` (
   `acc_id` int(11) NOT NULL AUTO_INCREMENT,
-  `acc_type` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `acc_type` varchar(50) NOT NULL,
   `acc_unit_price` int(11) NOT NULL,
   `acc_quantity` int(11) NOT NULL,
   PRIMARY KEY (`acc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `cars` (
   `car_id` int(11) NOT NULL AUTO_INCREMENT,
   `car_new` binary(1) NOT NULL,
   `car_used` binary(1) NOT NULL,
-  `car_category` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `car_brand` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `car_model` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `car_category` varchar(50) NOT NULL,
+  `car_brand` varchar(50) NOT NULL,
+  `car_model` varchar(50) NOT NULL,
   `car_unit_price` int(11) NOT NULL,
   `car_quantity` int(11) NOT NULL,
   `uni_id` int(11) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `cars` (
   KEY `uni_id` (`uni_id`),
   KEY `com_id` (`com_id`),
   KEY `acc_id` (`acc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -70,23 +70,35 @@ CREATE TABLE IF NOT EXISTS `cars` (
 DROP TABLE IF EXISTS `commercial`;
 CREATE TABLE IF NOT EXISTS `commercial` (
   `com_id` int(11) NOT NULL AUTO_INCREMENT,
-  `com_name` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_firstname` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_telephone` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_mail` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_department` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_concessionSiRET` int(11) NOT NULL,
-  `com_concessionAdress` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_concessiontelephone` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_concessionMail` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `com_concessionZipcode` int(11) NOT NULL,
-  `com_concessionCity` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `com_name` varchar(50) NOT NULL,
+  `com_firstname` varchar(50) NOT NULL,
+  `com_telephone` varchar(50) NOT NULL,
+  `com_mail` varchar(50) NOT NULL,
+  `com_department` varchar(50) NOT NULL,
+  `con_SIRET` int(11) NOT NULL,
   PRIMARY KEY (`com_id`),
   UNIQUE KEY `com_telephone` (`com_telephone`),
   UNIQUE KEY `com_mail` (`com_mail`),
-  UNIQUE KEY `com_concessionSiRET` (`com_concessionSiRET`),
-  UNIQUE KEY `com_concessionMail` (`com_concessionMail`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `con_SIRET` (`con_SIRET`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `concession`
+--
+
+DROP TABLE IF EXISTS `concession`;
+CREATE TABLE IF NOT EXISTS `concession` (
+  `con_SIRET` int(11) NOT NULL AUTO_INCREMENT,
+  `con_adress` varchar(50) NOT NULL,
+  `con_telephone` varchar(50) NOT NULL,
+  `con_mail` varchar(50) NOT NULL,
+  `con_Zipcode` int(11) NOT NULL,
+  `con_city` varchar(50) NOT NULL,
+  PRIMARY KEY (`con_SIRET`),
+  UNIQUE KEY `con_mail` (`con_mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -97,14 +109,14 @@ CREATE TABLE IF NOT EXISTS `commercial` (
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `cus_id` int(11) NOT NULL AUTO_INCREMENT,
-  `cus_name` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `cus_firstname` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `cus_adress` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `cus_name` varchar(50) NOT NULL,
+  `cus_firstname` varchar(50) NOT NULL,
+  `cus_adress` varchar(50) NOT NULL,
   `cus_Zipcode` int(11) NOT NULL,
-  `cus_country` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `cus_password` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `cus_telephone` varchar(20) CHARACTER SET latin1 NOT NULL,
-  `cus_mail` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `cus_country` varchar(50) NOT NULL,
+  `cus_password` varchar(50) NOT NULL,
+  `cus_telephone` varchar(20) NOT NULL,
+  `cus_mail` varchar(50) NOT NULL,
   `cus_add` datetime NOT NULL,
   `cus_update` datetime NOT NULL,
   `cus_licence` int(11) NOT NULL,
@@ -113,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   UNIQUE KEY `cus_telephone` (`cus_telephone`),
   UNIQUE KEY `cus_mail` (`cus_mail`),
   UNIQUE KEY `cus_licence` (`cus_licence`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `customers`
@@ -135,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `maintain` (
   `com_id` int(11) NOT NULL,
   PRIMARY KEY (`rep_id`,`com_id`),
   KEY `com_id` (`com_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -146,25 +158,25 @@ CREATE TABLE IF NOT EXISTS `maintain` (
 DROP TABLE IF EXISTS `order_`;
 CREATE TABLE IF NOT EXISTS `order_` (
   `ord_id` int(11) NOT NULL AUTO_INCREMENT,
-  `ord_shipAdress` varchar(80) CHARACTER SET latin1 NOT NULL,
-  `ord_shipCity` varchar(30) CHARACTER SET latin1 NOT NULL,
-  `ord_shipName` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `ord_shipAdress` varchar(80) NOT NULL,
+  `ord_shipCity` varchar(30) NOT NULL,
+  `ord_shipName` varchar(30) NOT NULL,
   `ord_shipZipcode` int(11) NOT NULL,
-  `ord_shipRegion` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `ord_shipRegion` varchar(50) NOT NULL,
   `ord_shipVia` int(11) NOT NULL,
   `ord_date` datetime NOT NULL,
-  `ord_type_paiement` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `ord_paiementMethod` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `ord_type_paiement` varchar(50) NOT NULL,
+  `ord_paiementMethod` varchar(50) NOT NULL,
   `ord_shippedDate` datetime NOT NULL,
   `ord_dateReceipt` datetime NOT NULL,
-  `ord_orderReceipt` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `ord_orderReceipt` varchar(50) NOT NULL,
   `cus_id` int(11) NOT NULL,
   `com_id` int(11) NOT NULL,
   PRIMARY KEY (`ord_id`),
   UNIQUE KEY `ord_orderReceipt` (`ord_orderReceipt`),
   KEY `cus_id` (`cus_id`),
   KEY `com_id` (`com_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -175,11 +187,11 @@ CREATE TABLE IF NOT EXISTS `order_` (
 DROP TABLE IF EXISTS `repair_and_maintenance`;
 CREATE TABLE IF NOT EXISTS `repair_and_maintenance` (
   `rep_id` int(11) NOT NULL AUTO_INCREMENT,
-  `rep_type` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `rep_unit_price` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `rep_type` varchar(50) NOT NULL,
+  `rep_unit_price` varchar(50) NOT NULL,
   `rep_quantity` int(11) NOT NULL,
   PRIMARY KEY (`rep_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -192,12 +204,12 @@ CREATE TABLE IF NOT EXISTS `unit_in_stocks` (
   `uni_id` int(11) NOT NULL AUTO_INCREMENT,
   `uni_serialNumber` int(11) NOT NULL,
   `uni_kilometers` int(11) NOT NULL,
-  `uni_CT` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `uni_CT` varchar(50) NOT NULL,
   `uni_fiscal_power` int(11) NOT NULL,
-  `uni_carburant` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `uni_carburant` varchar(50) NOT NULL,
   `uni_assurance_date` datetime NOT NULL,
   PRIMARY KEY (`uni_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contraintes pour les tables déchargées
@@ -210,6 +222,12 @@ ALTER TABLE `cars`
   ADD CONSTRAINT `cars_ibfk_1` FOREIGN KEY (`uni_id`) REFERENCES `unit_in_stocks` (`uni_id`),
   ADD CONSTRAINT `cars_ibfk_2` FOREIGN KEY (`com_id`) REFERENCES `commercial` (`com_id`),
   ADD CONSTRAINT `cars_ibfk_3` FOREIGN KEY (`acc_id`) REFERENCES `accessories_and_option` (`acc_id`);
+
+--
+-- Contraintes pour la table `commercial`
+--
+ALTER TABLE `commercial`
+  ADD CONSTRAINT `commercial_ibfk_1` FOREIGN KEY (`con_SIRET`) REFERENCES `concession` (`con_SIRET`);
 
 --
 -- Contraintes pour la table `maintain`
